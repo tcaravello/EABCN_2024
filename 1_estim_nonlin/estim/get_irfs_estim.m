@@ -25,6 +25,7 @@ addpath([path '/_data'])
 save_fig = 0;
 %% Load Data
 load_var_data;
+
 startdate = find(date == 1969);
 enddate = find(date == 2006.75);
 
