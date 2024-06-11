@@ -1,91 +1,9 @@
 function [marginal_lik, quantiles_use] = harmonic_mean_geweke(param_collector, log_posterior_collector, settings_HM, model)
 
-global kappa_nkpc_mean kappa_nkpc_sd eis_mean eis_sd i_gamma_mean i_gamma_sd  frisch_mean frisch_sd
-
-if strcmp(model,'teq_simple')
-
-
-index_use = settings_HM.index_use;
-tau = settings_HM.tau ;
-target_Sigma_inv = settings_HM.target_Sigma_inv;
-N_IRFS = settings_HM.N_IRFS;
-
-log_posterior_use = log_posterior_collector + (N_IRFS/2)*log(2*pi) ...
-- 0.5*log(det(target_Sigma_inv)) - log((1-normcdf(-kappa_nkpc_mean/kappa_nkpc_sd))) - log((1-normcdf(-eis_mean/eis_sd)));
-
-n_param = size(param_collector,1);
-N_use = length(log_posterior_collector);
-param_use = param_collector;
-chol_cov = chol(cov(param_use'))\eye(n_param);
-f_exp = chol_cov*(param_use - mean(param_use,2));
-quantiles_use = quantile(f_exp',[0.025 0.16 0.84 0.975]); % I compute this as a diagnostic for non-normality.
-
-f_exp_sq = f_exp.^2;
-threshold = chi2inv(tau,n_param);
-indicator_use = (sum(f_exp_sq,1)<=threshold);
-
-%build f vector
-
-f_vec = (1/tau)*((2*pi)^(-n_param/2))*(det(chol_cov))*exp(-0.5*sum(f_exp_sq,1)).*indicator_use;
-
-posterior_use_inv = exp(-log_posterior_use);
-inside_sum = f_vec.*exp(log_posterior_use);
-
-% compute harmonic mean. Notice that log_posterior_use already has a minus
-% in front.
-
-marginal_lik = 1/mean(f_vec.*exp(log_posterior_use));
-
-elseif strcmp(model,'teq')
-
-index_use = settings_HM.index_use;
-tau = settings_HM.tau ;
-target_Sigma_inv = settings_HM.target_Sigma_inv;
-N_IRFS = settings_HM.N_IRFS;
-
-if size(param_collector,1) == 5
-global prior_m_f 
-param_m_f = param_collector(5,1);
-log_posterior_use = log_posterior_collector + (N_IRFS/2)*log(2*pi) ...
-- 0.5*log(det(target_Sigma_inv)) - log((1-normcdf(i_gamma_mean/i_gamma_sd)))...
-- log((1-normcdf(-frisch_mean/frisch_sd)))+log(prior_m_f(param_m_f));
-
-elseif size(param_collector,1) == 4
-
-log_posterior_use = log_posterior_collector + (N_IRFS/2)*log(2*pi) ...
-- 0.5*log(det(target_Sigma_inv)) - log((1-normcdf(i_gamma_mean/i_gamma_sd)))...
-- log((1-normcdf(-frisch_mean/frisch_sd)));
-
-end
-
-n_param = size(param_collector,1);
-N_use = length(log_posterior_collector);
-param_use = param_collector;
-chol_cov = chol(cov(param_use'))\eye(n_param);
-f_exp = chol_cov*(param_use - mean(param_use,2));
-quantiles_use = quantile(f_exp',[0.025 0.16 0.84 0.975]); % I compute this as a diagnostic for non-normality.
-
-f_exp_sq = f_exp.^2;
-threshold = chi2inv(tau,n_param);
-indicator_use = (sum(f_exp_sq,1)<=threshold);
-
-%build f vector
-
-f_vec = (1/tau)*((2*pi)^(-n_param/2))*(det(chol_cov))*exp(-0.5*sum(f_exp_sq,1)).*indicator_use;
-
-posterior_use_inv = exp(-log_posterior_use);
-inside_sum = f_vec.*exp(log_posterior_use);
-
-% compute harmonic mean. Notice that log_posterior_use already has a minus
-% in front.
-
-marginal_lik = 1/mean(f_vec.*exp(log_posterior_use));
-
-else
+global prior_zeta_p prior_zeta_w
 
 if size(param_collector,1) == 7
 
-global prior_zeta_p prior_zeta_w
 
 index_use = settings_HM.index_use;
 tau = settings_HM.tau ;
@@ -112,8 +30,8 @@ indicator_use = (sum(f_exp_sq,1)<=threshold);
 
 f_vec = (1/tau)*((2*pi)^(-n_param/2))*(det(chol_cov))*exp(-0.5*sum(f_exp_sq,1)).*indicator_use;
 
-posterior_use_inv = exp(-log_posterior_use);
-inside_sum = f_vec.*exp(log_posterior_use);
+%posterior_use_inv = exp(-log_posterior_use);
+%inside_sum = f_vec.*exp(log_posterior_use);
 
 % compute harmonic mean. Notice that log_posterior_use already has a minus
 % in front.
@@ -121,10 +39,6 @@ inside_sum = f_vec.*exp(log_posterior_use);
 marginal_lik = 1/mean(f_vec.*exp(log_posterior_use));
 
 elseif size(param_collector,1) == 9
-
-
-   
-global prior_zeta_p prior_zeta_w
 
 index_use = settings_HM.index_use;
 tau = settings_HM.tau ;
@@ -200,6 +114,5 @@ inside_sum = f_vec.*exp(log_posterior_use);
 marginal_lik = 1/mean(f_vec.*exp(log_posterior_use));
 
 
-end
 end
 end

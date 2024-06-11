@@ -93,7 +93,7 @@ det_X = [ones(length(vardata),1),(1:1:length(vardata))'];
 n_lags     = 2;                    % number of lags
 constant   = 0;                    % constant?
 IRF_hor    = 250;
-n_draws    = 1000;
+n_draws    = 50;
 n_y        = size(vardata,2);
 
 % historical episode of interest

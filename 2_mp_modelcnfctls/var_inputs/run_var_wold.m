@@ -18,7 +18,7 @@ task = '/var_inputs';
 addpath([path session '/_auxiliary_functions'])
 addpath([path '/_data/cmw'])
 
-save_results = 1;
+save_results = 0;
 
 plot_wold_irfs = 0; % 1 if you want to plot the IRFs, 0 if you don't, then the code just produces the results.
 

@@ -12,7 +12,7 @@ close all
 
 warning('off','MATLAB:dispatcher:nameConflict')
 
-path = '/Users/tomyc/Dropbox (MIT)/EACBN_2024/code';
+path = '/Users/tomyc/Dropbox (MIT)/EACBN_2024/GitHub/Test';
 session = '/2_mp_modelcnfctls';
 experiment = '/applications/second_moments';
 
@@ -30,7 +30,7 @@ cd([path session experiment]);
 % Experiment
 %----------------------------------------------------------------
 
-indic_1shock = 1; %if you want to use only the matched empirical shock to implement approximate counterfactual.
+indic_1shock = 0; %if you want to use only the matched empirical shock to implement approximate counterfactual.
 
 %----------------------------------------------------------------
 % Policy Shock Sufficient Statistics
