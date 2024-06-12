@@ -16,6 +16,8 @@ session = '/3_micro_macro';
 experiment = '/olg';
 
 save_fig = 0;
+only_final_figure = 1; % 0 if you want figures for slides, 1 if you only want final figure.
+
 
 addpath([path session experiment '/_auxiliary_functions']);
 cd([path session experiment]);
@@ -290,9 +292,15 @@ max_hor = 21;
 
 cd([path session experiment '/_figures']);
 
+if only_final_figure == 1
+    figs_indicator = [2];
+else
+    figs_indicator = [1;2];
+end
+
 % Full Information
 
-for fig_n = 1:2
+for fig_n = figs_indicator
 
 if fig_n == 1
 select_hor = select_hor_aux(1);
@@ -365,7 +373,13 @@ end
 %%
 % Behavioral
 
-for fig_n = 1:2
+if only_final_figure == 1
+    figs_indicator = [2];
+else
+    figs_indicator = [1;2];
+end
+
+for fig_n = figs_indicator
 
 if fig_n == 1
 select_hor = select_hor_aux(1);
